@@ -1,0 +1,163 @@
+version: '3.7'
+services:
+
+  portainer:
+     container_name: "portainer"
+     image: "portainer/portainer-ce:latest"
+     restart: always
+     ports:
+       - "9000:9000"
+       - "8100:8000"
+     volumes:
+       - /var/run/docker.sock:/var/run/docker.sock
+       - portainer_data:/data
+
+
+  mpd:
+    image: tobi312/rpi-mpd:alpine
+    container_name: mpd
+    restart: unless-stopped
+    network_mode: "host"
+    ports:
+      - 6600:6600  # MPD Client
+      - 8001:8000  # Stream
+    volumes:
+      - ./mpd:/var/lib/mpd:rw
+      - /home/tola2000/.config/pulse/cookie:/root/.config/pulse/cookie
+      - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket
+      - ./mpd/mpd.conf:/etc/mpd.conf:ro
+
+    environment:
+      - TZ=Europe/Brussels
+      - PULSE_SERVER=192.168.1.2
+      - PULSE_COOKIE=/root/.config/pulse/cookie
+
+      
+
+  vscode:
+      container_name: vscode
+      image: codercom/code-server
+      volumes:
+         # Set <project dir> to the directory you want to open in VS Code.
+         - ./:/home/coder/docker
+         - ../domotica_src:/home/coder/Workspaces
+         # <vs code config> should point to a local dir where vs code stores its data.
+         - vscode_data:/home/coder/.local/share/code-server
+      ports:
+         - "8500:8080"
+      command: code-server --auth password --port 8080 --disable-telemetry /home/coder/project
+      user: root:root
+      environment:
+         PASSWORD: "ikke2000"
+      restart: unless-stopped
+
+  home_assistant:
+      # build: /home/domotica_src/home-assistant-tola2000
+      # image: "homeassistant:tola2000"
+      image: homeassistant/home-assistant:latest
+      container_name: "home_assistant"
+      restart: always
+      network_mode: "host"
+      # depends_on:
+        # - mosquitto
+        # - pulseaudio
+        # - influxdb
+            #condition: service_started
+      healthcheck:
+          test: curl -f http://localhost:8123 || exit 1
+          interval: 30s
+          timeout: 10s
+          retries: 6
+      logging:
+        driver: "json-file"
+        options:
+          max-size: 10m
+          max-file: "3"
+      devices:    
+        - "/dev/ttyUSB0:/dev/ttyUSB0" 
+        - "/dev/snd:/dev/snd"     
+
+      volumes:
+        - ./ha:/config
+        - /etc/localtime:/etc/localtime:ro
+        - /home/tola2000/.config/pulse/cookie:/root/.config/pulse/cookie
+        - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket
+
+      environment:
+        - TZ=Europe/Brussels
+        - PULSE_SERVER=192.168.1.2
+        - PULSE_COOKIE=/root/.config/pulse/cookie
+
+
+  mongo:
+    image: mongo:3.6
+    container_name: mongo
+    networks:
+      - unifi
+    restart: always
+    volumes:
+      - db:/data/db
+      - dbcfg:/data/configdb
+
+  spotify:
+    container_name: spotify
+    restart: always
+    image: hvalev/spotifyd-pulseaudio
+    network_mode: "host"
+    environment: 
+      - PULSE_SERVER=192.168.1.2
+    volumes:
+      - ./spotifyd/spotifyd.conf:/etc/spotifyd.conf
+
+  controller:
+    image: "jacobalberty/unifi:${TAG:-latest}"
+    container_name: controller
+    depends_on:
+      - mongo
+    init: true
+    networks:
+      - unifi
+    restart: always
+    volumes:
+      - dir:/unifi
+      - data:/unifi/data
+      - log:/unifi/log
+      - cert:/unifi/cert
+      - init:/unifi/init.d
+      - run:/var/run/unifi
+      # Mount local folder for backups and autobackups
+      - ./backup:/unifi/data/backup
+    user: unifi
+    sysctls:
+      net.ipv4.ip_unprivileged_port_start: 0
+    environment:
+      DB_URI: mongodb://mongo/unifi
+      STATDB_URI: mongodb://mongo/unifi_stat
+      DB_NAME: unifi
+    ports:
+      - "3478:3478/udp" # STUN
+      - "6789:6789/tcp" # Speed test
+      - "8080:8080/tcp" # Device/ controller comm.
+      - "8443:8443/tcp" # Controller GUI/API as seen in a web browser
+      - "8880:8880/tcp" # HTTP portal redirection
+      - "8843:8843/tcp" # HTTPS portal redirection
+      - "10001:10001/udp" # AP discovery
+volumes:
+  portainer_data:
+  vscode_data:
+  db:
+  dbcfg:
+  data:
+  log:
+  cert:
+  init:
+  dir:
+  run:
+  influxdb2:
+  pulse: 
+
+networks:
+  unifi:
+
+
+ 
