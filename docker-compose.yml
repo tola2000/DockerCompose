@@ -13,9 +13,6 @@ services:
        - portainer_data:/data
 
 
-#test
-
-
   mpd:
     image: tobi312/rpi-mpd:alpine
     container_name: mpd
@@ -54,6 +51,23 @@ services:
          PASSWORD: "ikke2000"
       restart: unless-stopped
 
+  pulseaudio:
+    build: /home/domotica_src/pulseaudio-tola2000
+    #privileged: true
+    restart: always
+    ports:
+      - "4713:4713"
+    volumes:
+    #  - ./pulse/home:/home/pulse
+      - ./pulse/home:/etc/pulse
+      - ./pulse/log:/home/pulse/log
+      - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket
+    devices:
+       - /dev/snd/controlC0
+       - /dev/snd/pcmC0D0p
+      # - /dev/snd/pcmC0D1p
+       - /dev/snd/timer
+       
   home_assistant:
       # build: /home/domotica_src/home-assistant-tola2000
       # image: "homeassistant:tola2000"
