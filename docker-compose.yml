@@ -142,7 +142,7 @@ services:
       - ./spotifyd/cache:/cache
       - ./spotifyd/spotifyd.conf:/etc/spotifyd.conf:ro
       - /home/tola2000/.config/pulse/cookie:/root/.config/pulse/cookie:ro
-    
+      - /run/user/1000/pulse/native:/tmp/pulseaudio.socket
 
 
   controller:
