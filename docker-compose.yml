@@ -134,7 +134,7 @@ services:
     container_name: spotify
     restart: always
     network_mode: host
-    user: ${PUID}:${PGID}
+    user: root
     devices:
       - /dev/snd:/dev/snd
     environment:
