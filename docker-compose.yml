@@ -18,7 +18,6 @@ services:
     container_name: mpd
     restart: unless-stopped
     network_mode: "host"
-    user: "${UID}:${GID}"  
     ports:
       - 6600:6600  # MPD Client
       - 8001:8000  # Stream
