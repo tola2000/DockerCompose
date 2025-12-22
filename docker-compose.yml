@@ -124,8 +124,9 @@ services:
     environment: 
       - PULSE_SERVER=192.168.1.2
     volumes:
-      - ./spotifyd/spotifyd.conf:/etc/spotifyd.conf
-      - ./spotifyd/cache:/var/cache/spotifyd
+      - ./spotifyd/cache:/root/.cache/spotifyd
+      - ./spotifyd/spotifyd.conf:/etc/spotifyd.conf:ro
+      - /home/tola2000/.config/pulse/cookie:/root/.config/pulse/cookie:ro
 
   controller:
     image: "jacobalberty/unifi:${TAG:-latest}"
