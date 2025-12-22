@@ -130,20 +130,19 @@ services:
 
 
   spotify:
-    image: hvalev/spotifyd-pulseaudio
+    image: hvalev/spotifyd-pulseaudio:latest
     container_name: spotify
     restart: always
     network_mode: host
 
     environment:
       - PULSE_SERVER=192.168.1.2
-      - DBUS_SESSION_BUS_ADDRESS=unix:path=/run/dbus/system_bus_socket
-
+  
     volumes:
       - ./spotifyd/cache:/cache
       - ./spotifyd/spotifyd.conf:/etc/spotifyd.conf:ro
       - /home/tola2000/.config/pulse/cookie:/root/.config/pulse/cookie:ro
-      - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket
+    
 
 
   controller:
