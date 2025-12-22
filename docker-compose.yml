@@ -139,7 +139,7 @@ services:
       - /dev/snd:/dev/snd
     environment:
       - PULSE_SERVER=192.168.1.2
-  
+      - PULSE_COOKIE=/tmp/pulseaudio.cookie
     volumes:
       - ./spotifyd/cache:/cache
       - ./spotifyd/spotifyd.conf:/etc/spotifyd.conf:ro
