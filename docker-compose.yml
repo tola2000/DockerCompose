@@ -125,6 +125,7 @@ services:
       - PULSE_SERVER=192.168.1.2
     volumes:
       - ./spotifyd/spotifyd.conf:/etc/spotifyd.conf
+      - ./spotifyd/cache:/var/cache/spotifyd
 
   controller:
     image: "jacobalberty/unifi:${TAG:-latest}"
