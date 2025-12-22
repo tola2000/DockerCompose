@@ -134,8 +134,7 @@ services:
     container_name: spotify
     restart: always
     network_mode: host
-    user: root
-
+    #user: root
     environment:
       - PULSE_SERVER=192.168.1.2
       - PULSE_COOKIE=/tmp/pulseaudio.cookie
