@@ -116,32 +116,16 @@ services:
       - db:/data/db
       - dbcfg:/data/configdb
 
-  # spotify:
-  #   container_name: spotify
-  #   restart: always
-  #   image: hvalev/spotifyd-pulseaudio
-  #   network_mode: "host"
-  #   environment: 
-  #     - PULSE_SERVER=192.168.1.2
-  #   volumes:
-  #     - ./spotifyd/cache:/cache
-  #     - ./spotifyd/spotifyd.conf:/etc/spotifyd.conf:ro
-  #     - /home/tola2000/.config/pulse/cookie:/root/.config/pulse/cookie:ro
-
-
   spotify:
     image: hvalev/spotifyd-pulseaudio:latest
     container_name: spotify
     restart: always
     network_mode: host
-    #user: root
     environment:
       - PULSE_SERVER=192.168.1.2
       - PULSE_COOKIE=/tmp/pulseaudio.cookie
     volumes:
-#      - ./spotifyd/cache:/cache
       - ./spotifyd/spotifyd.conf:/etc/spotifyd.conf:ro
- #     - /home/tola2000/.config/pulse/cookie:/root/.config/pulse/cookie:ro
       - /run/user/1000/pulse:/run/user/1000/pulse
 
 
