@@ -18,19 +18,21 @@ services:
     container_name: mpd
     restart: unless-stopped
     network_mode: "host"
+    depends_on:
+      - pulseaudio
     ports:
       - 6600:6600  # MPD Client
       - 8001:8000  # Stream
     volumes:
       - ./mpd:/var/lib/mpd:rw
       - /home/tola2000/.config/pulse/cookie:/root/.config/pulse/cookie
-      - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket
+   #   - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket
       - ./mpd/mpd.conf:/etc/mpd.conf:ro
 
     environment:
       - TZ=Europe/Brussels
       - PULSE_SERVER=192.168.1.2
-      - PULSE_COOKIE=/root/.config/pulse/cookie
+   #   - PULSE_COOKIE=/root/.config/pulse/cookie
 
       
 
@@ -57,6 +59,8 @@ services:
     restart: always
     ports:
       - "4713:4713"
+    depends_on:
+      - pulseaudio
     volumes:
     #  - ./pulse/home:/home/pulse
       - ./pulse/home:/etc/pulse
