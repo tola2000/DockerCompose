@@ -134,7 +134,9 @@ services:
     container_name: spotify
     restart: always
     network_mode: host
-
+    user: ${PUID}:${PGID}
+    devices:
+      - /dev/snd:/dev/snd
     environment:
       - PULSE_SERVER=192.168.1.2
   
