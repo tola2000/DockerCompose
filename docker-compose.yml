@@ -70,8 +70,8 @@ services:
        
   home_assistant:
       # build: /home/domotica_src/home-assistant-tola2000
-      # image: "homeassistant:tola2000"
-      image: homeassistant/home-assistant:latest
+      image: "homeassistant:tola2000"
+     # image: homeassistant/home-assistant:latest
       container_name: "home_assistant"
       restart: always
       network_mode: "host"
