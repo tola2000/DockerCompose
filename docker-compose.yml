@@ -75,6 +75,9 @@ services:
       container_name: "home_assistant"
       restart: always
       network_mode: "host"
+      cap_add:
+        - NET_ADMIN
+        - NET_RAW
       # depends_on:
         # - mosquitto
         # - pulseaudio
