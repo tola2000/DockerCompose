@@ -93,9 +93,14 @@ services:
         options:
           max-size: 10m
           max-file: "3"
+      # devices:    
+      #   - "/dev/ttyUSB0:/dev/ttyUSB0" 
+      #   - "/dev/snd:/dev/snd"     
+
       devices:    
-        - "/dev/ttyUSB0:/dev/ttyUSB0" 
-        - "/dev/snd:/dev/snd"     
+        - "/dev/serial/by-id/usb-Nabu_Casa_ZBT-2_E072A1FB115C-if00:/dev/ttyACM0" 
+        - "/dev/snd:/dev/snd"
+
 
       volumes:
         - ./ha:/config
