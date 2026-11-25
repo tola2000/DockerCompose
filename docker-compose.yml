@@ -33,22 +33,22 @@ services:
 
       
 
-  # vscode:
-  #     container_name: vscode
-  #     image: codercom/code-server
-  #     volumes:
-  #        # Set <project dir> to the directory you want to open in VS Code.
-  #        - ./:/home/coder/docker
-  #        - ../domotica_src:/home/coder/Workspaces
-  #        # <vs code config> should point to a local dir where vs code stores its data.
-  #        - vscode_data:/home/coder/.local/share/code-server
-  #     ports:
-  #        - "8500:8080"
-  #     command: code-server --auth password --port 8080 --disable-telemetry /home/coder/project
-  #     user: root:root
-  #     environment:
-  #        PASSWORD: "ikke2000"
-  #     restart: unless-stopped
+  vscode:
+      container_name: vscode
+      image: codercom/code-server
+      volumes:
+         # Set <project dir> to the directory you want to open in VS Code.
+         - ./:/home/coder/docker
+         - ../domotica_src:/home/coder/Workspaces
+         # <vs code config> should point to a local dir where vs code stores its data.
+         - vscode_data:/home/coder/.local/share/code-server
+      ports:
+         - "8500:8080"
+      command: code-server --auth password --port 8080 --disable-telemetry /home/coder/project
+      user: root:root
+      environment:
+         PASSWORD: "ikke2000"
+      restart: unless-stopped
 
   pulseaudio:
     build: /home/domotica_src/pulseaudio-tola2000
@@ -174,7 +174,7 @@ services:
   #     - "10001:10001/udp" # AP discovery
 volumes:
   portainer_data:
- # vscode_data:
+  vscode_data:
  # db:
  # dbcfg:
   data:
