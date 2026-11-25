@@ -39,7 +39,8 @@ services:
       volumes:
          # Set <project dir> to the directory you want to open in VS Code.
          - ./:/home/coder/docker
-         - ../domotica_src:/home/coder/Workspaces
+         - ../domotica_src:/home/Domotica_src
+         - ../domotica:/home/Domotica
          # <vs code config> should point to a local dir where vs code stores its data.
          - vscode_data:/home/coder/.local/share/code-server
       ports:
